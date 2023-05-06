@@ -1,6 +1,13 @@
-const { Client } = require("pg"); // imports the pg module
+const { Client } = require("pg");
+require("dotenv").config(); // Import dotenv to load environment variables
 
-const client = new Client("postgres://localhost:5432/juicebox-dev");
+// Create a new client using the DATABASE_URL environment variable
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
 
 /**
  * USER Methods
