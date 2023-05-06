@@ -1,15 +1,18 @@
+require('dotenv').config();
 const PORT = 3000;
 const express = require("express");
 const server = express();
 const apiRouter = require("./api");
-server.use("/api", apiRouter);
-
-const { Client } = require("pg");
-
+const {client }= require("./db/index");
 const morgan = require("morgan");
-server.use(morgan("dev"));
 
+// Middleware
+
+server.use(morgan("dev"));
 server.use(express.json());
+
+
+server.use('/api', apiRouter);
 
 server.use((req, res, next) => {
   console.log("<____Body Logger START____>");
@@ -18,7 +21,7 @@ server.use((req, res, next) => {
   next();
 });
 
-const client = new Client("postgres://localhost:5432/juicebox-dev");
+// connecting our DB.
 client.connect();
 
 server.listen(PORT, () => {
