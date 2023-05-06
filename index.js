@@ -12,6 +12,7 @@ server.use(morgan("dev"));
 server.use(express.json());
 
 
+
 server.use('/api', apiRouter);
 
 server.use((req, res, next) => {

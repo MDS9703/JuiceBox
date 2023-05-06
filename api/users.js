@@ -4,16 +4,18 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const { getUserByUsername, createUser } = require("../db"); // Import necessary functions from the db folder
 const { JWT_SECRET } = process.env;
-
+const { requireUser } = require("./utils");
 
 const usersRouter = express.Router();
+
+// middleware 
 
 usersRouter.use((req, res, next) => {
   console.log("A request is being made to /users");
   next();
 });
 
-usersRouter.get("/", async (req, res) => {
+usersRouter.get("/", requireUser, async (req, res) => {
   const users = await getAllUsers();
   res.send({ users: [] });
 });
@@ -39,8 +41,11 @@ usersRouter.post("/login", async (req, res, next) => {
         JWT_SECRET
       );
 
-      // Send the token as a response
-      res.send({ token });
+      // Send the success message and token as a response
+      res.send({
+        message: "You are logged in!",
+        token,
+      });
     } else {
       next({
         name: "IncorrectCredentialsError",
